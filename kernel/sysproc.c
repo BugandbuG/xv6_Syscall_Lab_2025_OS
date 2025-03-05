@@ -5,6 +5,11 @@
 #include "memlayout.h"
 #include "spinlock.h"
 #include "proc.h"
+#include "sysinfo.h"
+#include "sleeplock.h"
+#include "fs.h"
+#include "file.h"
+
 
 uint64
 sys_exit(void)
@@ -90,4 +95,32 @@ sys_uptime(void)
   xticks = ticks;
   release(&tickslock);
   return xticks;
+}
+
+int sys_hello(void) {
+  printf("Hello, world!\n");
+  return 0;
+}
+extern uint64 free_memory(void);
+extern uint64 count_proc(void);
+extern uint64 count_openfiles(void);
+
+uint64
+sys_sysinfo(void)
+{
+  struct sysinfo info;
+  uint64 addr;
+  struct proc *p = myproc();
+  
+  // Fix the argaddr usage
+  argaddr(0, &addr);
+  
+  info.freemem = free_memory();
+  info.nproc = count_proc();
+  info.nopenfiles = count_openfiles();
+  
+  if(copyout(p->pagetable, addr, (char *)&info, sizeof(info)) < 0)
+    return -1;
+  
+  return 0;
 }
