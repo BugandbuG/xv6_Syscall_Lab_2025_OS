@@ -97,6 +97,7 @@ sys_uptime(void)
   return xticks;
 }
 
+
 int sys_hello(void) {
   printf("Hello, world!\n");
   return 0;
@@ -122,5 +123,19 @@ sys_sysinfo(void)
   if(copyout(p->pagetable, addr, (char *)&info, sizeof(info)) < 0)
     return -1;
   
+
+
+int sys_hello(void) { 
+  printf("Hello, world!\n"); 
+  return 0; 
+} 
+
+uint64 sys_trace(void) {
+  int mask;
+  argint(0, &mask);
+  if(mask < 0) 
+    return -1;
+  struct proc *p = myproc();
+  p->trace_mask = mask;  // Lưu mask vào tiến trình hiện tại
   return 0;
 }

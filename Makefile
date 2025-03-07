@@ -195,7 +195,10 @@ UPROGS=\
 	$U/_wc\
 	$U/_zombie\
 	$U/_testhello\
+
 	$U/_sysinfotest\
+
+	$U/_trace\
 
 
 
